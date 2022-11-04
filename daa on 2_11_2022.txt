@@ -35,6 +35,7 @@ void main(){
     scanf("%d",&b[j]);
     merge(a,m,b,n);
 }
+
 output:
 3 3 
 1 2 3 
