@@ -1,0 +1,143 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct node{
+    int data;
+    struct node* next;
+};
+struct node* create(){  
+struct node *head=NULL;
+struct node *tail=NULL;
+int value;
+int ch;   
+do{
+struct node* newnode=(struct node*)malloc(sizeof(struct node));    
+printf("enter value:\n");
+scanf("%d",&value);
+newnode->data=value; 
+newnode->next=NULL;
+if(head==NULL){
+head=newnode;  
+tail=newnode;    
+}
+else{ 
+tail->next=newnode;
+tail=newnode;    
+}
+printf("continue-1 or exit-0 :\n"); 
+fflush(stdin);      
+scanf("%d",&ch); 
+}while(ch==1); 
+return head;
+}
+void display(struct node* arr[],int n){ 
+for(int i=0;i<n;i++){
+     struct node *temp=arr[i];
+     while(temp!=NULL){   
+     printf("%d  ",temp->data);  
+     temp=temp->next; 
+     }
+   }
+}
+void displayl(struct node* head){
+    struct node *temp=head;
+     while(temp!=NULL){   
+     printf("%d  ",temp->data);  
+     temp=temp->next; 
+     }
+   }
+void merge(int arr[],int p,int q,int r){
+    int m=q-p+1;
+    int n=r-q;
+    int A[m],B[n];
+    for(int i=0;i<m;i++){
+        A[i]=arr[p+i];
+    }
+     for(int i=0;i<n;i++){
+        B[i]=arr[q+1+i];
+    }
+    int i=0,j=0,k=p;
+    while(i<m && j<n){
+        if(A[i]<B[j]){
+            arr[k++]=A[i++];
+        }
+        else{
+            arr[k++]=B[j++];
+        }
+    }
+    for(;i<m;i++){
+        arr[k++]=A[i];
+    }
+     for(;j<n;j++){
+        arr[k++]=B[j];
+    }
+}
+void mergesort(int arr[],int low,int high){
+    if(low<high){
+       int mid=(high+low)/2;
+        mergesort(arr,low,mid);
+        mergesort(arr,mid+1,high);
+        merge(arr,low,mid,high);
+ }
+}
+struct node* mergeK(int arr[],int c){
+    struct node *tail=NULL;
+     struct node *head=NULL;
+     for(int i=0;i<c;i++){
+         struct node* newnode=(struct node*)malloc(sizeof(struct node));
+         newnode->data=arr[i];
+         newnode->next=NULL;
+         if(head==NULL){
+             head=newnode;
+             tail=newnode;
+         }
+         else{
+             tail->next=newnode;
+             tail=newnode;
+         }
+     }
+     return head;
+}
+struct node* mergeKLists(struct node** lists, int listsSize){
+   
+    int t=0,i=0;
+    while(i<listsSize){
+        struct node* temp1=lists[i];
+        while(temp1!=NULL){
+            t++;
+            temp1=temp1->next;
+        }
+        i++;
+     }
+     if(t==0){
+       return NULL;
+   }
+    int arr[t];
+      int p=0;
+      for(int i=0;i<listsSize;i++){
+        struct node* temp1=lists[i];
+        while(temp1!=NULL){
+            arr[p]=temp1->data;
+            p=p+1;
+            temp1=temp1->next;
+        }
+     }
+     mergesort(arr,0,t-1);
+      struct node* head=mergeK(arr,t);
+     return head;
+}
+void main(){
+    int n;
+    printf("enter the size of array:\n");
+    scanf("%d",&n);
+    struct node* arr[n];
+    for(int i=0;i<n;i++){
+        arr[i]=NULL;
+        arr[i]=create();
+    }
+    printf("given k list before merge sort is:\n");
+    display(arr,n);
+    printf("\n");
+    printf("list after merge sort is:\n");
+    struct node* head=mergeKLists(arr,n);
+    displayl(head);
+}
